@@ -66,8 +66,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
     val const: Double = 4.445 / 100
     val vershoksInSagenes: Int = sagenes * 48
     val vershoksInArshins: Int = arshins * (48 / 3)
-    val result: Double = vershoksInArshins + vershoksInSagenes + vershoks
-
+    val result: Int = vershoksInArshins + vershoksInSagenes + vershoks
     return result * const
 }
 
