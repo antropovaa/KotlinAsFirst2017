@@ -58,7 +58,7 @@ fun timeForHalfWay(t1: Double, v1: Double,
     when {
         s <= (v1 * t1) -> t = s / v1
         (s > v1 * t1) && (s <= (v1 * t1 + v2 * t2)) -> t = t1 + (s - v1 * t1) / v2
-        s > (v1 * t1 + v2 + t2) -> t = t1 + t2 + (s - v1 * t1 - v2 * t2) / v3
+        s > (v1 * t1 + v2 * t2) -> t = t1 + t2 + (s - v1 * t1 - v2 * t2) / v3
         else -> t = 0.0
     }
     return t
@@ -138,7 +138,7 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
     fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         return if ((a > d) || (c > b)) -1
         else if ((c == b) || (a == d)) 0
-        else if ((c < b) && (c > a)) {
+        else if ((c < b) && (c >= a)) {
             if (d > b) b - c
             else d - c
         } else if (c < a) {
