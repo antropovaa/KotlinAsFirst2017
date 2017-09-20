@@ -2,6 +2,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import java.lang.Math.*
 
 /**
@@ -53,12 +54,14 @@ fun ageDescription(age: Int): String =
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val s = (v1 * t1 + v2 * t2 + v3 * t3)/ 2.0
+    val halfS = (v1 * t1 + v2 * t2 + v3 * t3)/ 2.0
+    val s1 = v1 * t1
+    val s2 = v2 * t2
     var t: Double
     when {
-        s <= (v1 * t1) -> t = s / v1
-        (s > v1 * t1) && (s <= (v1 * t1 + v2 * t2)) -> t = t1 + (s - v1 * t1) / v2
-        s > (v1 * t1 + v2 * t2) -> t = t1 + t2 + (s - v1 * t1 - v2 * t2) / v3
+        halfS <= s1 -> t = halfS / v1
+        (halfS > s1) && (halfS <= s1 + s2) -> t = t1 + (halfS - s1) / v2
+        halfS > (s1 + s2) -> t = t1 + t2 + (halfS - s1 - s2) / v3
         else -> t = 0.0
     }
     return t
@@ -75,14 +78,12 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int {
-    return when {
+                       rookX2: Int, rookY2: Int): Int = when {
         (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
         kingX == rookX1 || kingY == rookY1 -> 1
         kingX == rookX2 || kingY == rookY2 -> 2
         else -> 0
     }
-}
 
     /**
      * Простая
@@ -96,14 +97,12 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
      */
     fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                               rookX: Int, rookY: Int,
-                              bishopX: Int, bishopY: Int): Int {
-        return when {
-            ( (kingX == rookX) || (kingY == rookY)) && ( (abs(kingY - bishopY) == abs(kingX - bishopX)) || (abs(kingX - bishopX) == abs(kingY - bishopY))) -> 3
+                              bishopX: Int, bishopY: Int): Int = when {
+            (kingX == rookX || kingY == rookY) && (abs(kingY - bishopY) == abs(kingX - bishopX) || abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
             kingX == rookX || kingY == rookY -> 1
             abs(kingY - bishopY) == abs(kingX - bishopX) || abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
             else -> 0
         }
-    }
 
     /**
      * Простая
@@ -120,9 +119,9 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 
         return when {
             theLongestSide > theShortestSide + theMiddleSide -> -1
-            theLongestSide * theLongestSide > theMiddleSide * theMiddleSide + theShortestSide * theShortestSide -> 2
-            theLongestSide * theLongestSide == theMiddleSide * theMiddleSide + theShortestSide * theShortestSide -> 1
-            theLongestSide * theLongestSide < theMiddleSide * theMiddleSide + theShortestSide * theShortestSide -> 0
+            sqr(theLongestSide) > sqr(theMiddleSide) + sqr(theShortestSide) -> 2
+            sqr(theLongestSide) == sqr(theMiddleSide) + sqr(theShortestSide) -> 1
+            sqr(theLongestSide) < sqr(theMiddleSide) + sqr(theShortestSide) -> 0
             else -> -1
         }
     }

@@ -115,7 +115,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
     // Вычислим коэффициент, на который будет увеличиваться вклад каждый год:
-    val percentRatio = 1 + percent.toDouble() / 100
+    val percentRatio = 1 + percent / 100.0
     return initial * percentRatio * percentRatio * percentRatio
 }
 
@@ -130,5 +130,5 @@ fun numberRevert(number: Int): Int {
     val num1 = number % 10
     val num2 = number % 100 / 10
     val num3 = number / 100
-    return num1 * 100 + num2 * 10+ num3
+    return num1 * 100 + num2 * 10 + num3
 }
