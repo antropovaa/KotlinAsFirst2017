@@ -66,7 +66,7 @@ fun digitNumber(n: Int): Int {
     var count = 0
     var num = n
     if (n == 0) return 1 else
-        while (num > 0) {
+        while (num != 0) {
             count++
             num /= 10
         }
@@ -153,7 +153,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var result = false
     for (i in 1..sqrt(n.toDouble()).toInt()) {
-        if ((i*i <= n) && (i*i >= m)) result = true
+        if (((i*i <= n) && (i*i >= m)) && (m != 0) && (n != 0)) result = true
     }
     return result
 }
@@ -219,7 +219,7 @@ fun isPalindrome(n: Int): Boolean {
 fun hasDifferentDigits(n: Int): Boolean {
     val digit = n % 10
     var num = n
-    while (num > 0) {
+    while (num != 0) {
         if (num % 10 != digit) return true
         num /= 10
     }
