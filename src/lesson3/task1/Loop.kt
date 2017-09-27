@@ -104,8 +104,8 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var d = 0
-    for (i in 2..n)
+    var d = 2
+    for (i in 2..sqrt(n.toDouble()).toInt())
         if (n % i == 0) {
             d = i
             break
@@ -136,11 +136,10 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var result = true
     for (i in 2..m) {
-        if ((m % i == 0) && (n % i == 0)) result = false
+        if (m % i == 0 && n % i == 0) return false
     }
-    return result
+    return true
 }
 
 /**
@@ -151,11 +150,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var result = false
-    for (i in 1..sqrt(n.toDouble()).toInt()) {
-        if (((i*i <= n) && (i*i >= m)) && (m != 0) && (n != 0)) result = true
+    for (i in 0..sqrt(n.toDouble()).toInt()) {
+        if (i * i <= n && i * i >= m) return true
     }
-    return result
+    return false
 }
 
 /**
@@ -199,16 +197,8 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    var result = 0
-    var number = n
-    // для решения этой задачи удобно воспользоваться алгоритмом "переворачивания" числа, полученным в предыдущей задаче
-    while (number > 0) {
-        result = result * 10 + number % 10
-        number /= 10
-    }
-    return if (result == n) true else false
-}
+fun isPalindrome(n: Int): Boolean =
+        revert(n) == n
 
 /**
  * Средняя

@@ -40,7 +40,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean =
-        sqrt(sqr(abs(x1 - x2)) + sqr(abs(y1-y2))) <= r2-r1
+        sqrt(sqr(abs(x1 - x2)) + sqr(abs(y1 - y2))) <= r2 - r1
 
 /**
  * Средняя
@@ -55,6 +55,6 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     val maxLength = max(max(a,b),c)
     val minLength = min(min(a,b),c)
     val midLength = a + b + c - (maxLength + minLength)
-    return if ((minLength <= min(r,s)) && (midLength <= max(r,s))) true
+    return if (minLength <= min(r,s) && midLength <= max(r,s)) true
     else false
 }
