@@ -112,11 +112,8 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
 fun abs(v: List<Double>): Double {
     var sum = 0.0
 
-    if (v.isNotEmpty()) {
-        for (i in 0 until v.size)
-            sum += v[i] * v[i]
-    }
-    else v.isEmpty()
+    for (i in 0 until v.size)
+        sum += v[i] * v[i]
 
     return sqrt(sum)
 }
@@ -137,11 +134,7 @@ fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum() /
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    val sum : Double
-
-    if (list.isNotEmpty())
-        sum = list.sum() / list.size
-    else return list
+    val sum  = list.sum() / list.size
 
     for (i in 0 until list.size) {
         list[i] -= sum
@@ -160,9 +153,8 @@ fun center(list: MutableList<Double>): MutableList<Double> {
 fun times(a: List<Double>, b: List<Double>): Double {
     var C = 0.0
 
-    if (a.isNotEmpty() && b.isNotEmpty())
-        for (i in 0 until a.size)
-           C += a[i] * b[i]
+    for (i in 0 until a.size)
+        C += a[i] * b[i]
 
     return C
 }
@@ -178,9 +170,8 @@ fun times(a: List<Double>, b: List<Double>): Double {
 fun polynom(p: List<Double>, x: Double): Double {
     var polynom = 0.0
 
-    if (p.isNotEmpty())
-        for (i in 0 until p.size)
-            polynom += p[i] * pow(x, i.toDouble())
+    for (i in 0 until p.size)
+        polynom += p[i] * pow(x, i.toDouble())
 
     return polynom
 }
@@ -196,10 +187,8 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty())
-        for (i in 1 until list.size)
-            list[i] = list[i - 1] + list[i]
-    else return list
+    for (i in 1 until list.size)
+        list[i] = list[i - 1] + list[i]
 
     return list
 }
