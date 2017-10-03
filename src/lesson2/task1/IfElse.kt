@@ -57,7 +57,6 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val halfS = (v1 * t1 + v2 * t2 + v3 * t3)/ 2.0
     val s1 = v1 * t1
     val s2 = v2 * t2
-    var t: Double
     return when {
         halfS <= s1 -> halfS / v1
         (halfS > s1) && (halfS <= s1 + s2) -> t1 + (halfS - s1) / v2
@@ -116,15 +115,15 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
      * Если такой треугольник не существует, вернуть -1.
      */
     fun triangleKind(a: Double, b: Double, c: Double): Int {
-        val theLongestSide = max(max(a, b), c)
-        val theShortestSide = min(min(a, b), c)
-        val theMiddleSide = a + b + c - theLongestSide - theShortestSide
+        val max = maxOf(a, b, c)
+        val min = minOf(a, b, c)
+        val mid = a + b + c - max - min
 
         return when {
-            theLongestSide > theShortestSide + theMiddleSide -> -1
-            sqr(theLongestSide) > sqr(theMiddleSide) + sqr(theShortestSide) -> 2
-            sqr(theLongestSide) == sqr(theMiddleSide) + sqr(theShortestSide) -> 1
-            sqr(theLongestSide) < sqr(theMiddleSide) + sqr(theShortestSide) -> 0
+            max > min + mid -> -1
+            sqr(max) > sqr(mid) + sqr(min) -> 2
+            sqr(max) == sqr(mid) + sqr(min) -> 1
+            sqr(max) < sqr(mid) + sqr(min) -> 0
             else -> -1
         }
     }
@@ -137,14 +136,8 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
      * Найти длину пересечения отрезков AB и CD.
      * Если пересечения нет, вернуть -1.
      */
-    fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-        return if (a > d || c > b) -1
-        else if (c == b || a == d) 0
-        else if (c < b && c >= a) {
-            if (d > b) b - c
-            else d - c
-        } else if (c < a) {
-            if (b > d) d - a
-            else b - a
-        } else -1
-    }
+    fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+            a > d || c > b -> -1
+            c == b || a == d -> 0
+            else -> abs(min(b, d) - max(a, c))
+        }
