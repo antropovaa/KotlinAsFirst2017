@@ -252,32 +252,19 @@ fun convert(n: Int, base: Int): List<Int> {
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-
-// Для более удобного решения задачи введем дополнительную функцию замены чисел на латинские буквы
-fun change(x:Int): String = when (x) {
-    10 -> "a"; 11 -> "b"; 12 -> "c"
-    13 -> "d"; 14 -> "e"; 15 -> "f"
-    16 -> "g"; 17 -> "h"; 18 -> "i"
-    19 -> "j"; 20 -> "k"; 21 -> "l"
-    22 -> "m"; 23 -> "n"; 24 -> "o"
-    25 -> "p"; 26 -> "q"; 27 -> "r"
-    28 -> "s"; 29 -> "t"; 30 -> "u"
-    31 -> "v"; 32 -> "w"; 33 -> "x"
-    34 -> "y"
-    else -> "z"
-}
-
 fun convertToString(n: Int, base: Int): String {
     val list = mutableListOf<String>()
     var num = n
 
     while (num >= base) {
-        if (num % base < 10) list.add((num % base).toString())
-        else list.add(change(num % base))
+        // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
+        if (num % base < 10) list.add((num % base + 48).toChar().toString())
+        else list.add((num % base + 87).toChar().toString())
         num /= base
     }
-    if (num < 10) list.add(num.toString())
-    else list.add(change(num))
+
+    if (num < 10) list.add((num + 48).toChar().toString())
+    else list.add((num + 87).toChar().toString())
 
     return list.reversed().joinToString(separator = "")
 }
@@ -310,7 +297,17 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    val list = mutableListOf<Int>()
+
+    for (i in 0 until str.length) {
+        // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
+        if (str[i].toString() in "0".."9") list.add((str[i] - 48).toInt())
+        else list.add((str[i] - 87).toInt())
+    }
+
+    return decimal(list, base)
+}
 
 /**
  * Сложная
