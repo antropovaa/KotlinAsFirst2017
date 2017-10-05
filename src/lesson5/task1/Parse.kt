@@ -80,8 +80,8 @@ fun dateStrToDigit(str: String): String {
         }
         val year = date[2].toInt()
 
-        if (date.size == 3 && day in 1 .. 31 && month in 1 .. 12 && year > 0)
-            return String.format("%02d.%02d.%04d", day, month, year)
+        if (date.size == 3 && day in 1 .. 31 && month in 1 .. 12)
+            return String.format("%02d.%02d.%d", day, month, year)
     } catch (e: Exception) {
         return ""
     }
@@ -108,7 +108,7 @@ fun dateDigitToStr(digital: String): String {
             else -> "error"
         }
         val year = date[2].toInt()
-        if (date.size == 3 && day.toInt() in 1 .. 31 && date[1].toInt() in 1 .. 12 && year > 0)
+        if (date.size == 3 && day.toInt() in 1 .. 31 && date[1].toInt() in 1 .. 12)
             return "$day $month $year"
     } catch (e: Exception) {
         return ""
