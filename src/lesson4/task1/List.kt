@@ -133,7 +133,7 @@ fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum() /
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    val midSum  = mean(list)
+    val midSum = mean(list)
 
     for (i in 0 until list.size) {
         list[i] -= midSum
@@ -141,7 +141,6 @@ fun center(list: MutableList<Double>): MutableList<Double> {
 
      return list
 }
-
 
 /**
  * Средняя
@@ -253,20 +252,20 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val list = mutableListOf<String>()
+    val result = StringBuilder()
     var num = n
 
     while (num >= base) {
         // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
-        if (num % base < 10) list.add((num % base + 48).toChar().toString())
-        else list.add((num % base + 87).toChar().toString())
+        if (num % base < 10) result.append('0'.plus(num % base).toString())
+        else result.append('W'.plus(num % base).toString())
         num /= base
     }
 
-    if (num < 10) list.add((num + 48).toChar().toString())
-    else list.add((num + 87).toChar().toString())
+    if (num < 10) result.append('0'.plus(num).toString())
+    else result.append('W'.plus(num).toString())
 
-    return list.reversed().joinToString(separator = "")
+    return result.toString()
 }
 
 /**
