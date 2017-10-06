@@ -72,15 +72,23 @@ fun dateStrToDigit(str: String): String {
     try {
         val day = date[0].toInt()
         val month = when (date[1]) {
-            "января" -> 1; "февраля" -> 2; "марта" -> 3
-            "апреля" -> 4; "мая" -> 5; "июня" -> 6
-            "июля" -> 7; "августа" -> 8; "сентября" -> 9
-            "октября" -> 10; "ноября" -> 11; "декабря" -> 12
-            else -> 13
+            "января" -> 1
+            "февраля" -> 2
+            "марта" -> 3
+            "апреля" -> 4
+            "мая" -> 5
+            "июня" -> 6
+            "июля" -> 7
+            "августа" -> 8
+            "сентября" -> 9
+            "октября" -> 10
+            "ноября" -> 11
+            "декабря" -> 12
+            else -> return ""
         }
         val year = date[2].toInt()
 
-        if (date.size == 3 && day in 1 .. 31 && month in 1 .. 12)
+        if (date.size == 3 && day in 1 .. 31)
             return String.format("%02d.%02d.%d", day, month, year)
     } catch (e: Exception) {
         return ""
@@ -99,16 +107,24 @@ fun dateDigitToStr(digital: String): String {
     val date = digital.split(".")
 
     try {
-        val day = date[0].toInt().toString()
+        val day = date[0].toInt()
         val month = when (date[1]) {
-            "01" -> "января"; "02" -> "февраля"; "03" -> "марта"
-            "04" -> "апреля"; "05" -> "мая"; "06" -> "июня"
-            "07" -> "июля"; "08" -> "августа"; "09" -> "сентября"
-            "10" -> "октября"; "11" -> "ноября"; "12" -> "декабря"
-            else -> "error"
+            "01" -> "января"
+            "02" -> "февраля"
+            "03" -> "марта"
+            "04" -> "апреля"
+            "05" -> "мая"
+            "06" -> "июня"
+            "07" -> "июля"
+            "08" -> "августа"
+            "09" -> "сентября"
+            "10" -> "октября"
+            "11" -> "ноября"
+            "12" -> "декабря"
+            else -> return ""
         }
         val year = date[2].toInt()
-        if (date.size == 3 && day.toInt() in 1 .. 31 && date[1].toInt() in 1 .. 12)
+        if (date.size == 3 && day in 1 .. 31)
             return "$day $month $year"
     } catch (e: Exception) {
         return ""
@@ -131,8 +147,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     if (phone == "") return ""
 
-    var plus = ""
-    if (phone.first() == '+') plus = "+"
+    val plus = if (phone.first() == '+') "+" else ""
 
     val editPhone = phone.split("+", "-", "(", ")", " ").joinToString("")
     val result = StringBuilder()
