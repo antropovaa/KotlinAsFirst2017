@@ -265,7 +265,7 @@ fun convertToString(n: Int, base: Int): String {
     if (num < 10) result.append('0'.plus(num).toString())
     else result.append('W'.plus(num).toString())
 
-    return result.toString()
+    return result.toString().reversed()
 }
 
 /**
