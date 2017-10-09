@@ -67,9 +67,10 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
+    val regex = Regex("^\\d{1,2} [а-я]{3,} \\d+$")
     val date = str.split(" ")
 
-    try {
+    if (str matches regex) {
         val day = date[0].toInt()
         val month = when (date[1]) {
             "января" -> 1
@@ -87,13 +88,8 @@ fun dateStrToDigit(str: String): String {
             else -> return ""
         }
         val year = date[2].toInt()
-
-        if (date.size == 3 && day in 1 .. 31)
-            return String.format("%02d.%02d.%d", day, month, year)
-    } catch (e: Exception) {
-        return ""
-    }
-    return ""
+        return String.format("%02d.%02d.%d", day, month, year)
+    } else return ""
 }
 
 /**
@@ -104,9 +100,9 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val date = digital.split(".")
-
-    try {
+    val check = Regex("^\\d{2}\\.\\d{2}\\.\\d+$")
+    if (digital matches check) {
+        val date = digital.split(".")
         val day = date[0].toInt()
         val month = when (date[1]) {
             "01" -> "января"
@@ -124,12 +120,8 @@ fun dateDigitToStr(digital: String): String {
             else -> return ""
         }
         val year = date[2].toInt()
-        if (date.size == 3 && day in 1 .. 31)
-            return "$day $month $year"
-    } catch (e: Exception) {
-        return ""
-    }
-    return ""
+        return "$day $month $year"
+    } else return ""
 }
 
 /**
@@ -148,7 +140,6 @@ fun flattenPhoneNumber(phone: String): String {
     if (phone == "") return ""
 
     val plus = if (phone.first() == '+') "+" else ""
-
     val editPhone = phone.split("+", "-", "(", ")", " ").joinToString("")
     val result = StringBuilder()
 
@@ -171,7 +162,21 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+val regex = Regex("\\d+")
+
+fun bestLongJump(jumps: String): Int {
+    val result = jumps.split(" ", "%", "-")
+    var max = 0
+
+    if (result.joinToString("") matches regex) {
+        for (i in result) {
+            if (i.isNotEmpty() && i.toInt() > max) max = i.toInt()
+        }
+    }
+    else return -1
+
+    return max
+}
 
 /**
  * Сложная
@@ -194,7 +199,23 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+val regexstr = Regex("\\d+([+-]\\d+)*")
+
+fun plusMinus(expression: String): Int {
+    val str = expression.split(" ")
+    var result = str[0].toInt()
+
+    require(str.joinToString("") matches regexstr)
+
+    if (str.joinToString("") matches regexstr) {
+        for (i in 2..str.size step 2)
+            when {
+                str[i - 1] == "+" -> result += str[i].toInt()
+                str[i - 1] == "-" -> result -= str[i].toInt()
+            }
+    }
+    return result
+}
 
 /**
  * Сложная
