@@ -67,7 +67,7 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val regex = Regex("^\\d{1,2} [а-я]{3,} \\d+$")
+    val regex = Regex("^\\d{1,2} [а-я]+ \\d+$")
     val date = str.split(" ")
 
     if (str matches regex) {
