@@ -69,7 +69,6 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val regex = Regex("^\\d{1,2} [а-я]+ \\d+$")
     val date = str.split(" ")
-
     if (str matches regex) {
         val day = date[0].toInt()
         val month = when (date[1]) {
@@ -101,8 +100,9 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val check = Regex("^\\d{2}\\.\\d{2}\\.\\d+$")
+    val date = digital.split(".")
+
     if (digital matches check) {
-        val date = digital.split(".")
         val day = date[0].toInt()
         val month = when (date[1]) {
             "01" -> "января"
@@ -144,7 +144,7 @@ fun flattenPhoneNumber(phone: String): String {
     val result = StringBuilder()
 
     for (i in 0 until editPhone.length) {
-        if (editPhone[i].toString() in "0" .. "9")
+        if (editPhone[i] in '0'..'9')
             result.append(editPhone[i])
         else return ""
     }
@@ -162,18 +162,19 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-val regex = Regex("\\d+")
 
 fun bestLongJump(jumps: String): Int {
-    val result = jumps.split(" ", "%", "-")
-    var max = 0
+    val regex = Regex("\\d+")
+    val result = jumps.split(" ", "%", "-").filter { it.isNotEmpty() }
+    if (result.isEmpty())
+        return -1
 
-    if (result.joinToString("") matches regex) {
-        for (i in result) {
-            if (i.isNotEmpty() && i.toInt() > max) max = i.toInt()
-        }
+    var max = 0
+    for (i in result) {
+        if (!i.matches(regex))
+            return -1
+        if (i.toInt() > max) max = i.toInt()
     }
-    else return -1
 
     return max
 }
@@ -199,22 +200,21 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-val regexstr = Regex("\\d+([+-]\\d+)*")
-
 fun plusMinus(expression: String): Int {
-    val str = expression.split(" ")
-    var result = str[0].toInt()
+    val regex = Regex("\\d+( [+-] \\d+)*")
+    if (expression matches regex) {
+        val str = expression.split(" ")
+        var result = str[0].toInt()
 
-    require(str.joinToString("") matches regexstr)
-
-    if (str.joinToString("") matches regexstr) {
         for (i in 2..str.size step 2)
             when {
                 str[i - 1] == "+" -> result += str[i].toInt()
                 str[i - 1] == "-" -> result -= str[i].toInt()
             }
+        return result
     }
-    return result
+    else
+        throw IllegalArgumentException()
 }
 
 /**
