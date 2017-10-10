@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson5.task1
 
 /**
@@ -48,12 +49,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -212,8 +211,7 @@ fun plusMinus(expression: String): Int {
                 str[i - 1] == "-" -> result -= str[i].toInt()
             }
         return result
-    }
-    else
+    } else
         throw IllegalArgumentException()
 }
 
@@ -239,7 +237,22 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val regex = Regex("^(\\S+ \\d+\\.\\d+;?)( \\S+ \\d+\\.\\d+;?)*$")
+    return if (description matches regex) {
+        val list = description.split(" ", ";").filter { it.isNotEmpty() }
+        var max = 0.0
+        var num = 0
+
+        for (i in 0 until list.size step 2)
+            if (list[i+1].toDouble() > max) {
+                max = list[i+1].toDouble()
+                num = i
+            }
+        list[num]
+
+    } else ""
+}
 
 /**
  * Сложная
