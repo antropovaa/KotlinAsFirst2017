@@ -301,8 +301,8 @@ fun decimalFromString(str: String, base: Int): Int {
 
     for (i in 0 until str.length) {
         // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
-        if (str[i].toString() in "0".."9") list.add((str[i] - 48).toInt())
-        else list.add((str[i] - 87).toInt())
+        if (str[i] in '0'..'9') list.add(str[i] - '0')
+        else list.add(str[i] - 'W')
     }
 
     return decimal(list, base)
