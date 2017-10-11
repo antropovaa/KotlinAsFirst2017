@@ -245,7 +245,7 @@ fun mostExpensive(description: String): String {
     var max = 0.0
     var num = 0
 
-    for (i in 1 until list.size step 3) {
+    for (i in 1 until list.size - 1 step 3) {
         if (list[i] matches regex1 && list[i+1] matches regex2) return ""
         if (list[i].toDouble() > max) {
             max = list[i].toDouble()
