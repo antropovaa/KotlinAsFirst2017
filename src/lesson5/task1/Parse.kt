@@ -238,20 +238,21 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    val regex = Regex("^(\\S+ \\d+\\.\\d+;?)( \\S+ \\d+\\.\\d+;?)*$")
-    return if (description matches regex) {
-        val list = description.split(" ", ";").filter { it.isNotEmpty() }
-        var max = 0.0
-        var num = 0
+    val regex1 = Regex("\\d+")
+    val regex2 = Regex(" ")
 
-        for (i in 0 until list.size step 2)
-            if (list[i+1].toDouble() > max) {
-                max = list[i+1].toDouble()
-                num = i
-            }
-        list[num]
+    val list = description.split(" ", ";")
+    var max = 0.0
+    var num = 0
 
-    } else ""
+    for (i in 1 until list.size step 3) {
+        if (list[i] matches regex1 && list[i+1] matches regex2) return ""
+        if (list[i].toDouble() > max) {
+            max = list[i].toDouble()
+            num = i - 1
+        }
+    }
+    return list[num]
 }
 
 /**
