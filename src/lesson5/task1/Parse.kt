@@ -252,6 +252,7 @@ fun mostExpensive(description: String): String {
             num = i - 1
         }
     }
+    if (description != "" && max < list[list.size - 1].toDouble()) num = list.size - 2
     return list[num]
 }
 
