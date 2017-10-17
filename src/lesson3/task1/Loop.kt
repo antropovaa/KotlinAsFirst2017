@@ -151,7 +151,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in 0..sqrt(n.toDouble()).toInt()) {
-        if (i * i <= n && i * i >= m) return true
+        if (i * i in m..n) return true
     }
     return false
 }
@@ -263,7 +263,26 @@ fun hasDifferentDigits(n: Int): Boolean {
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var nums = 0 // общее кол-во цифр
+    var sqr = 0 // рассматриваемый квадрат числа
+    var i = 1
+
+    while (nums < n) {
+        sqr = i * i
+        var l = sqr
+        i++
+        while (l > 0) {
+            l /= 10
+            nums++
+        }
+    }
+
+    return if (nums != n)
+        sqr / pow(10.0, ((nums - n).toDouble())).toInt() % 10
+    else
+        sqr % 10
+}
 
 /**
  * Сложная
