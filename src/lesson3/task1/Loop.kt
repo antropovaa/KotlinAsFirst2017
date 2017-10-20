@@ -65,12 +65,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var num = n
     var count = 0
-    if (n == 0) return 1 else
+    return if (n == 0) 1 else {
         while (num != 0) {
             count++
             num /= 10
         }
-        return count
+        count
+    }
 }
 
 /**
@@ -79,7 +80,22 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n <= 2) 1 else fib(n - 2) + fib(n - 1)
+fun fib(n: Int): Int {
+    var fib1 = 1
+    var fib2 = 1
+    var sum = 0
+    var i = 2
+
+    return if (n <= 2) 1 else {
+        while (n > i) {
+            sum = fib1 + fib2
+            fib1 = fib2
+            fib2 = sum
+            i++
+        }
+        sum
+    }
+}
 
 /**
  * Простая
@@ -92,10 +108,12 @@ fun lcm(m: Int, n: Int): Int {
     var b = n
     // C помощью цикла найдем НОД, который будет заключаться в переменной a:
     while (a != b) {
-        if (a > b) a = a - b
-        else b = b - a
+        if (a > b) a -= b
+        else b -= a
     }
-    return m * n / a
+    val num1 = m / a
+    val num2 = n
+    return num1 * num2
 }
 
 /**
@@ -104,13 +122,9 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var d = n
     for (i in 2..sqrt(n.toDouble()).toInt())
-        if (n % i == 0) {
-            d = i
-            break
-        }
-    return d
+        if (n % i == 0) return i
+    return n
 }
 
 /**
@@ -119,13 +133,9 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var d = 0
-    for (i in n-1 downTo 1)
-        if (n % i == 0) {
-            d = i
-            break
-        }
-    return d
+    for (i in 2..sqrt(n.toDouble()).toInt())
+        if (n % (n / i) == 0) return n / i
+    return 1
 }
 
 /**
@@ -135,12 +145,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..m) {
-        if (m % i == 0 && n % i == 0) return false
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 /**
  * Простая
@@ -264,22 +269,18 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var nums = 0 // общее кол-во цифр
-    var sqr = 0 // рассматриваемый квадрат числа
+    var num = 0 // общее кол-во цифр
     var i = 1
 
-    while (nums < n) {
-        sqr = i * i
-        var l = sqr
+    while (num < n) {
+        num += digitNumber(i * i)
         i++
-        while (l > 0) {
-            l /= 10
-            nums++
-        }
     }
 
-    return if (nums != n)
-        sqr / pow(10.0, ((nums - n).toDouble())).toInt() % 10
+    val sqr = pow(i - 1.0, 2.0).toInt()
+
+    return if (num != n)
+        sqr / pow(10.0, ((num - n).toDouble())).toInt() % 10
     else
         sqr % 10
 }
