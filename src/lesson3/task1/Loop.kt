@@ -292,4 +292,19 @@ fun squareSequenceDigit(n: Int): Int {
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var num = 0 // общее кол-во цифр
+    var i = 1
+
+    while (num < n) {
+        num += digitNumber(fib(i))
+        i++
+    }
+
+    val fib = fib(i - 1)
+
+    return if (num != n)
+        fib / pow(10.0, ((num - n).toDouble())).toInt() % 10
+    else
+        fib % 10
+}
