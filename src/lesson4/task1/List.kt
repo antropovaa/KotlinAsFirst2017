@@ -2,6 +2,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.revert
 import java.lang.Math.*
 
 /**
@@ -135,9 +136,8 @@ fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum() /
 fun center(list: MutableList<Double>): MutableList<Double> {
     val midSum = mean(list)
 
-    for (i in 0 until list.size) {
+    for (i in 0 until list.size)
         list[i] -= midSum
-    }
 
      return list
 }
@@ -257,13 +257,17 @@ fun convertToString(n: Int, base: Int): String {
 
     while (num >= base) {
         // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
-        if (num % base < 10) result.append('0'.plus(num % base).toString())
-        else result.append('W'.plus(num % base).toString())
+        if (num % base < 10)
+            result.append('0'.plus(num % base).toString())
+        else
+            result.append('W'.plus(num % base).toString())
         num /= base
     }
 
-    if (num < 10) result.append('0'.plus(num).toString())
-    else result.append('W'.plus(num).toString())
+    if (num < 10)
+        result.append('0'.plus(num).toString())
+    else
+        result.append('W'.plus(num).toString())
 
     return result.toString().reversed()
 }
@@ -325,4 +329,48 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val part1 = n / 1000
+    val part2 = n % 1000
+    var result = listOf<String>()
+
+    if (part2 % 100 in 11..19) result += teens[part2 % 100 - 10]
+    else {
+        result += units[part2 % 10]
+        result += tens[part2 % 100 / 10]
+    }
+    result += hundreds[part2 / 100]
+
+    if (part1 != 0) {
+        result += when {
+            part1 % 10 == 0 || part1 % 10 >= 5 || part1 % 100 in 5..20 -> "тысяч"
+            part1 % 10 == 1 -> "тысяча"
+            else -> "тысячи"
+        }
+
+        if (part1 % 100 in 11..19) {
+            result += teens[part1 % 100 - 10]
+        } else {
+            result += when (part1 % 10) {
+                1 -> "одна"
+                2 -> "две"
+                else -> units[part1 % 10]
+            }
+            result += tens[part1 % 100 / 10]
+        }
+        result += hundreds[part1 / 100]
+    }
+    return result.reversed().filter { it.isNotEmpty() }.joinToString(" ")
+}
+
+val units = listOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь",
+        "восемь", "девять")
+
+val tens = listOf("", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+        "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+
+val hundreds = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот",
+        "шестьсот", "семьсот", "восемьсот", "девятьсот")
+
+val teens = listOf("", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+        "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
