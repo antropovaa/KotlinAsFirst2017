@@ -150,12 +150,12 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
 fun times(a: List<Double>, b: List<Double>): Double {
-    var C = 0.0
+    var c = 0.0
 
     for (i in 0 until a.size)
-        C += a[i] * b[i]
+        c += a[i] * b[i]
 
-    return C
+    return c
 }
 
 /**
@@ -252,24 +252,15 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val result = StringBuilder()
-    var num = n
+    val str = convert(n, base)
+    val result = mutableListOf<String>()
 
-    while (num >= base) {
-        // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
-        if (num % base < 10)
-            result.append('0'.plus(num % base).toString())
-        else
-            result.append('W'.plus(num % base).toString())
-        num /= base
-    }
+    for (i in 0 until str.size)
+        if (str[i] >= 10)
+            result.add(('W' + str[i]).toString())
+        else result.add(str[i].toString())
 
-    if (num < 10)
-        result.append('0'.plus(num).toString())
-    else
-        result.append('W'.plus(num).toString())
-
-    return result.toString().reversed()
+    return result.joinToString("")
 }
 
 /**
@@ -305,7 +296,7 @@ fun decimalFromString(str: String, base: Int): Int {
 
     for (i in 0 until str.length) {
         // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
-        if (str[i] in '0'..'9') list.add(str[i] - '0')
+        if (str[i] in '0'..'9') list.add(str[i].toString().toInt())
         else list.add(str[i] - 'W')
     }
 
