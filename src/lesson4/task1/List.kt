@@ -257,7 +257,7 @@ fun convertToString(n: Int, base: Int): String {
 
     for (i in 0 until str.size)
         if (str[i] >= 10)
-            result.add(('W' + str[i]).toString())
+            result.add(('a' - 10 + str[i]).toString())
         else result.add(str[i].toString())
 
     return result.joinToString("")
@@ -297,7 +297,7 @@ fun decimalFromString(str: String, base: Int): Int {
     for (i in 0 until str.length) {
         // Воспользовавшись таблицей символов ASCII, можно сделать соответсвие между буквами и числами
         if (str[i] in '0'..'9') list.add(str[i].toString().toInt())
-        else list.add(str[i] - 'W')
+        else list.add(str[i] - 'a' + 10)
     }
 
     return decimal(list, base)
@@ -312,15 +312,18 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    val roman = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    val arabic = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     var result = listOf<String>()
     var num = n
+    val numbers = listOf(
+            Pair("M", 1000), Pair("CM", 900), Pair("D", 500), Pair("CD", 400),
+            Pair("C", 100), Pair("XC", 90), Pair("L", 50), Pair("XL", 40),
+            Pair("X", 10), Pair("IX", 9), Pair("V", 5), Pair("IV", 4), Pair("I", 1)
+    )
 
-    for (i in 0 until arabic.size)
-        while (num >= arabic[i]) {
-            result += roman[i]
-            num -= arabic[i]
+    for (number in numbers)
+        while (num >= number.second) {
+            result += number.first
+            num -= number.second
         }
 
     return result.joinToString("")
