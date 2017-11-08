@@ -131,7 +131,7 @@ fun diameter(vararg points: Point): Segment {
  */
 fun circleByDiameter(diameter: Segment): Circle {
     val x = (diameter.end.x - diameter.begin.x) / 2 + diameter.begin.x
-    val y = (diameter.end.y + diameter.begin.y) / 2 + diameter.begin.y
+    val y = (diameter.end.y - diameter.begin.y) / 2 + diameter.begin.y
     val radius = Point(x, y).distance(Point(diameter.begin.x, diameter.begin.y))
 
     return Circle(Point(x, y), radius)
