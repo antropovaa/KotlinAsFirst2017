@@ -240,7 +240,7 @@ fun firstDuplicateIndex(str: String): Int {
         if (word[i] == word[i + 1])
             number = i
 
-    if (number > 0) {
+    if (number != -1) {
         for (i in 0 until number) {
             letters += word[i].length
         }
