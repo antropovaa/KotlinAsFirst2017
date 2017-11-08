@@ -190,11 +190,11 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     val clearList = jumps.split(" ").filter{ it != "%"}
-    var result = -1
+    var max = -1
     for (i in 0 until clearList.size - 1 step 2)
-        if (clearList[i + 1] == "+") result = clearList[i].toInt()
+        if (clearList[i + 1] == "+" && clearList[i].toInt() > max) max = clearList[i].toInt()
 
-    return result
+    return max
 }
 
 /**
