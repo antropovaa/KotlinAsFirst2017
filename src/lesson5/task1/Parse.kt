@@ -68,6 +68,7 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val regex = Regex("^\\d{1,2} [а-я]+ \\d+$")
     val date = str.split(" ")
+
     if (str matches regex) {
         val day = date[0].toInt()
         val month = when (date[1]) {
@@ -136,16 +137,17 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (phone == "") return ""
+    val regex = Regex("[- ]*(\\+\\d+)?[- ]*(\\(\\d+\\))?[0-9- ]+")
+    if (!phone.matches(regex)) return ""
 
-    val plus = if (phone.first() == '+') "+" else ""
-    val editPhone = phone.split("+", "-", "(", ")", " ").joinToString("")
+    var plus = ""
     val result = StringBuilder()
 
-    for (i in 0 until editPhone.length) {
-        if (editPhone[i] in '0'..'9')
-            result.append(editPhone[i])
-        else return ""
+    for (i in 0 until phone.length) {
+        when (phone[i]) {
+            in '0'..'9' -> result.append(phone[i])
+            '+' -> plus = "+"
+        }
     }
 
     return plus + result
@@ -163,16 +165,16 @@ fun flattenPhoneNumber(phone: String): String {
  */
 
 fun bestLongJump(jumps: String): Int {
-    val regex = Regex("\\d+")
-    val result = jumps.split(" ", "%", "-").filter { it.isNotEmpty() }
-    if (result.isEmpty())
-        return -1
+    val result = jumps.split(" ")
+    var max = -1
 
-    var max = 0
     for (i in result) {
-        if (!i.matches(regex))
+        if (!(i matches Regex("[-%]|\\d+")))
             return -1
-        if (i.toInt() > max) max = i.toInt()
+        else {
+            if (i matches Regex("\\d+") && i.toInt() > max)
+                max = i.toInt()
+        }
     }
 
     return max
@@ -189,10 +191,15 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val clearList = jumps.split(" ", "-", "%").filter{ it.isNotEmpty() }
+    val clearList = jumps.split(" ")
     var max = -1
-    for (i in 0 until clearList.size - 1)
-        if (clearList[i + 1] == "+" && clearList[i].toInt() > max) max = clearList[i].toInt()
+
+    for (i in 1 until clearList.size step 2)
+        if (clearList[i].matches(Regex("[%+-]+"))) {
+            for (char in clearList[i]) {
+                if (char == '+' && clearList[i - 1].toInt() > max) max = clearList[i - 1].toInt()
+            }
+        } else return -1
 
     return max
 }
@@ -213,9 +220,9 @@ fun plusMinus(expression: String): Int {
         var result = str[0].toInt()
 
         for (i in 2..str.size step 2)
-            when {
-                str[i - 1] == "+" -> result += str[i].toInt()
-                str[i - 1] == "-" -> result -= str[i].toInt()
+            when (str[i - 1]) {
+                "+" -> result += str[i].toInt()
+                "-" -> result -= str[i].toInt()
             }
         return result
     } else
@@ -232,20 +239,15 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val word = str.toLowerCase().split(" ")
+    val words = str.toLowerCase().split(" ")
     var number = -1
     var letters = 0
 
-    for (i in 0 until word.size - 1)
-        if (word[i] == word[i + 1])
+    for (i in 0 until words.size - 1)
+        if (words[i] == words[i + 1]) {
             number = i
-
-    if (number != -1) {
-        for (i in 0 until number) {
-            letters += word[i].length
-        }
-        return letters + number
-    }
+            return letters + number
+        } else letters += words[i].length
 
     return number
 }
@@ -262,21 +264,20 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    val regex1 = Regex("\\d+")
-    val regex2 = Regex(" ")
+    val regex = Regex("\\d+(\\.\\d+)?")
 
-    val list = description.split(" ", ";")
+    val list = description.split("; ", " ")
     var max = 0.0
     var num = 0
 
-    for (i in 1 until list.size - 1 step 3) {
-        if (list[i] matches regex1 && list[i+1] matches regex2) return ""
-        if (list[i].toDouble() > max) {
-            max = list[i].toDouble()
-            num = i - 1
+    for (i in 0 until list.size - 1 step 2) {
+        if (!(list[i + 1] matches regex)) return ""
+        if (list[i + 1].toDouble() > max) {
+            max = list[i + 1].toDouble()
+            num = i
         }
     }
-    if (description != "" && max < list[list.size - 1].toDouble()) num = list.size - 2
+
     return list[num]
 }
 
