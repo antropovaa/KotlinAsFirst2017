@@ -66,29 +66,30 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val regex = Regex("^\\d{1,2} [а-я]+ \\d+$")
-    val date = str.split(" ")
+    val dayRegex = Regex("(\\d{1,2})")
+    val monthRegex = Regex("[а-я]+")
+    val yearRegex = Regex("\\d+")
 
-    if (str matches regex) {
-        val day = date[0].toInt()
-        val month = when (date[1]) {
-            "января" -> 1
-            "февраля" -> 2
-            "марта" -> 3
-            "апреля" -> 4
-            "мая" -> 5
-            "июня" -> 6
-            "июля" -> 7
-            "августа" -> 8
-            "сентября" -> 9
-            "октября" -> 10
-            "ноября" -> 11
-            "декабря" -> 12
-            else -> return ""
-        }
-        val year = date[2].toInt()
-        return String.format("%02d.%02d.%d", day, month, year)
-    } else return ""
+    val dayElement = dayRegex.find(str, 0) ?: return ""
+    val monthElement = monthRegex.find(str, 1) ?: return ""
+    val month = when (monthElement.value) {
+        "января" -> 1
+        "февраля" -> 2
+        "марта" -> 3
+        "апреля" -> 4
+        "мая" -> 5
+        "июня" -> 6
+        "июля" -> 7
+        "августа" -> 8
+        "сентября" -> 9
+        "октября" -> 10
+        "ноября" -> 11
+        "декабря" -> 12
+        else -> return ""
+    }
+    val yearElement = yearRegex.find(str, 2) ?: return ""
+    return String.format("%02d.%02d.%d", dayElement.value.toInt(), month, yearElement.value.toInt())
+
 }
 
 /**
@@ -137,15 +138,16 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    val regex = Regex("[- ]*(\\+\\d+)?[- ]*(\\(\\d+\\))?[0-9- ]+")
-    if (!phone.matches(regex)) return ""
+    val newPhone = phone.split("-", " ").joinToString("")
+    val regex = Regex("""(\+\d+)?(\(\d+\))?[0-9]+""")
+    if (!newPhone.matches(regex)) return ""
 
     var plus = ""
     val result = StringBuilder()
 
-    for (i in 0 until phone.length) {
-        when (phone[i]) {
-            in '0'..'9' -> result.append(phone[i])
+    for (i in 0 until newPhone.length) {
+        when (newPhone[i]) {
+            in '0'..'9' -> result.append(newPhone[i])
             '+' -> plus = "+"
         }
     }
@@ -194,12 +196,14 @@ fun bestHighJump(jumps: String): Int {
     val clearList = jumps.split(" ").filter { it.isNotEmpty() }
     var max = -1
 
-    for (i in 1 until clearList.size step 2)
-        if (clearList[i].matches(Regex("[%+-]+"))) {
-            for (char in clearList[i]) {
-                if (char == '+' && clearList[i - 1].toInt() > max) max = clearList[i - 1].toInt()
-            }
+    for (i in 1 until clearList.size step 2) {
+        val attempt = clearList[i]
+        val result = clearList[i - 1]
+        if (attempt.matches(Regex("[%+-]+")) && result.matches(Regex("\\d+"))) {
+            if ('+' in attempt && result.toInt() > max)
+                max = result.toInt()
         } else return -1
+    }
 
     return max
 }
@@ -269,6 +273,8 @@ fun mostExpensive(description: String): String {
     val list = description.split("; ", " ")
     var max = 0.0
     var num = 0
+
+    if (list.size % 2 != 0) return ""
 
     for (i in 0 until list.size - 1 step 2) {
         if (!(list[i + 1] matches regex)) return ""
