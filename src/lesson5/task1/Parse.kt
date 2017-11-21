@@ -66,13 +66,11 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val dayRegex = Regex("(\\d{1,2})")
-    val monthRegex = Regex("[а-я]+")
-    val yearRegex = Regex("\\d+")
+    val regex = Regex("^(\\d{1,2}) ([а-я]+) (\\d+)$")
 
-    val dayElement = dayRegex.find(str, 0) ?: return ""
-    val monthElement = monthRegex.find(str, 1) ?: return ""
-    val month = when (monthElement.value) {
+    val match = regex.matchEntire(str) ?: return ""
+    val day = match.groups[1]!!.value
+    val month = when (match.groups[2]!!.value) {
         "января" -> 1
         "февраля" -> 2
         "марта" -> 3
@@ -87,9 +85,8 @@ fun dateStrToDigit(str: String): String {
         "декабря" -> 12
         else -> return ""
     }
-    val yearElement = yearRegex.find(str, 2) ?: return ""
-    return String.format("%02d.%02d.%d", dayElement.value.toInt(), month, yearElement.value.toInt())
-
+    val year = match.groups[3]!!.value
+    return String.format("%02d.%02d.%d", day.toInt(), month, year.toInt())
 }
 
 /**
@@ -100,29 +97,27 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val check = Regex("^\\d{2}\\.\\d{2}\\.\\d+$")
-    val date = digital.split(".")
+    val check = Regex("""^(\d{2})\.(\d{2})\.(\d+)$""")
 
-    if (digital matches check) {
-        val day = date[0].toInt()
-        val month = when (date[1]) {
-            "01" -> "января"
-            "02" -> "февраля"
-            "03" -> "марта"
-            "04" -> "апреля"
-            "05" -> "мая"
-            "06" -> "июня"
-            "07" -> "июля"
-            "08" -> "августа"
-            "09" -> "сентября"
-            "10" -> "октября"
-            "11" -> "ноября"
-            "12" -> "декабря"
-            else -> return ""
-        }
-        val year = date[2].toInt()
-        return "$day $month $year"
-    } else return ""
+    val match = check.matchEntire(digital) ?: return ""
+    val day = match.groups[1]!!.value.toInt()
+    val month = when (match.groups[2]!!.value) {
+        "01" -> "января"
+        "02" -> "февраля"
+        "03" -> "марта"
+        "04" -> "апреля"
+        "05" -> "мая"
+        "06" -> "июня"
+        "07" -> "июля"
+        "08" -> "августа"
+        "09" -> "сентября"
+        "10" -> "октября"
+        "11" -> "ноября"
+        "12" -> "декабря"
+        else -> return ""
+    }
+    val year = match.groups[3]!!.value
+    return "$day $month $year"
 }
 
 /**
@@ -138,21 +133,9 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    val newPhone = phone.split("-", " ").joinToString("")
     val regex = Regex("""(\+\d+)?(\(\d+\))?[0-9]+""")
-    if (!newPhone.matches(regex)) return ""
-
-    var plus = ""
-    val result = StringBuilder()
-
-    for (i in 0 until newPhone.length) {
-        when (newPhone[i]) {
-            in '0'..'9' -> result.append(newPhone[i])
-            '+' -> plus = "+"
-        }
-    }
-
-    return plus + result
+    val newPhone = regex.matchEntire(phone.replace("[ -]".toRegex(), "")) ?: return ""
+    return newPhone.value.replace("[()]".toRegex(), "")
 }
 
 /**
@@ -195,6 +178,8 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     val clearList = jumps.split(" ").filter { it.isNotEmpty() }
     var max = -1
+
+    if (clearList.size % 2 != 0) return -1
 
     for (i in 1 until clearList.size step 2) {
         val attempt = clearList[i]
