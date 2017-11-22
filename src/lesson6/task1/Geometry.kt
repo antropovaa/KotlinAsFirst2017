@@ -157,9 +157,11 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        val x = (other.b / cos(other.angle) - b / cos(angle)) / (tan(angle) - tan(other.angle))
-        val c = if (angle == PI / 2) Line(other.b, other.angle) else Line(b, angle)
-        val y = (x * sin(c.angle) + c.b) / cos(c.angle)
+        val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
+        val y = if (sin(angle) < sin(other.angle))
+                    (x * sin(this.angle) + this.b) / cos(this.angle)
+                else
+                    (x * sin(other.angle) + other.b) / cos(other.angle)
 
         return Point(x, y)
     }
@@ -181,7 +183,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    var angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x))
+    var angle = atan2(s.end.y - s.begin.y, s.end.x - s.begin.x)
 
     if (angle < 0) angle += PI
     if (angle >= PI) angle -= PI
@@ -203,9 +205,12 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val center = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
+    val line = lineByPoints(a, b)
     val angle =
-            if (lineByPoints(a, b).angle in PI / 2..PI) lineByPoints(a, b).angle - PI / 2
-            else lineByPoints(a, b).angle + PI / 2
+            if (line.angle >= PI / 2)
+                line.angle - PI / 2
+            else
+                line.angle + PI / 2
     return Line(center, angle)
 }
 
