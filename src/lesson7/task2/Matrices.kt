@@ -114,21 +114,24 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     while (fullCells < height * width) {
         for (j in const - 1 until width - const + 1) {
             matrix[const - 1, j] = const
+            fullCells++
         }
 
         for (i in const until height - const + 1) {
             matrix[i, width - const] = const
+            fullCells++
         }
 
         for (j in width - const - 1 downTo const - 1) {
             matrix[height - const, j] = const
+            fullCells++
         }
 
         for (i in height - const - 1 downTo const) {
             matrix[i, const - 1] = const
+            fullCells++
         }
         const++
-        fullCells += 4
     }
 
     return matrix
