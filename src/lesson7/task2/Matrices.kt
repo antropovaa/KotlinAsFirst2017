@@ -59,7 +59,38 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val matrix = createMatrix(height, width, height * width)
+    var number = 1
+    var const = 1
+
+    while (number <= height * width) {
+        for (j in const - 1 until width - const + 1) {
+            matrix[const - 1, j] = number
+            number++
+        }
+
+        for (i in const until height - const + 1) {
+            matrix[i, width - const] = number
+            number++
+            }
+
+        if (number >= height * width) return matrix
+
+        for (j in width - const - 1 downTo const - 1) {
+            matrix[height - const, j] = number
+            number++
+        }
+
+        for (i in height - const - 1 downTo const) {
+            matrix[i, const - 1] = number
+            number++
+        }
+        const++
+    }
+
+    return matrix
+}
 
 /**
  * Сложная
@@ -75,7 +106,35 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val matrix = createMatrix(height, width, height * width)
+    var number = 1
+    var const = 1
+
+    while (number <= Math.ceil(width / 2.0)) {
+        for (j in const - 1 until width - const + 1) {
+            matrix[const - 1, j] = number
+        }
+
+        for (i in const until height - const + 1) {
+            matrix[i, width - const] = number
+        }
+
+        if (number >= height * width) return matrix
+
+        for (j in width - const - 1 downTo const - 1) {
+            matrix[height - const, j] = number
+        }
+
+        for (i in height - const - 1 downTo const) {
+            matrix[i, const - 1] = number
+        }
+        const++
+        number++
+    }
+
+    return matrix
+}
 
 /**
  * Сложная
