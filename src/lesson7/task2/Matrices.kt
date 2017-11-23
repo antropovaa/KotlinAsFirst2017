@@ -108,29 +108,27 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val matrix = createMatrix(height, width, height * width)
-    var number = 1
     var const = 1
+    var fullCells = 0
 
-    while (number <= Math.ceil(width / 2.0)) {
+    while (fullCells < height * width) {
         for (j in const - 1 until width - const + 1) {
-            matrix[const - 1, j] = number
+            matrix[const - 1, j] = const
         }
 
         for (i in const until height - const + 1) {
-            matrix[i, width - const] = number
+            matrix[i, width - const] = const
         }
 
-        if (number >= height * width) return matrix
-
         for (j in width - const - 1 downTo const - 1) {
-            matrix[height - const, j] = number
+            matrix[height - const, j] = const
         }
 
         for (i in height - const - 1 downTo const) {
-            matrix[i, const - 1] = number
+            matrix[i, const - 1] = const
         }
         const++
-        number++
+        fullCells += 4
     }
 
     return matrix
