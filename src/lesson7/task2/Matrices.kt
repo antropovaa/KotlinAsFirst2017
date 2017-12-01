@@ -1,7 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson7.task2
 
 import lesson7.task1.Matrix
+import lesson7.task1.MatrixImpl
 import lesson7.task1.createMatrix
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
@@ -60,36 +62,30 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  *  9  8  7  6
  */
 fun generateSpiral(height: Int, width: Int): Matrix<Int> {
-    val matrix = createMatrix(height, width, height * width)
-    var number = 1
+    val matrixResult = createMatrix(height, width, height * width)
+    var currentNumber = 1
     var const = 1
-
-    while (number <= height * width) {
+    while (currentNumber <= height * width) {
         for (j in const - 1 until width - const + 1) {
-            matrix[const - 1, j] = number
-            number++
+            matrixResult[const - 1, j] = currentNumber
+            currentNumber++
         }
-
         for (i in const until height - const + 1) {
-            matrix[i, width - const] = number
-            number++
-            }
-
-        if (number >= height * width) return matrix
-
-        for (j in width - const - 1 downTo const - 1) {
-            matrix[height - const, j] = number
-            number++
+            matrixResult[i, width - const] = currentNumber
+            currentNumber++
         }
-
+        if (currentNumber >= height * width) return matrixResult
+        for (j in width - const - 1 downTo const - 1) {
+            matrixResult[height - const, j] = currentNumber
+            currentNumber++
+        }
         for (i in height - const - 1 downTo const) {
-            matrix[i, const - 1] = number
-            number++
+            matrixResult[i, const - 1] = currentNumber
+            currentNumber++
         }
         const++
     }
-
-    return matrix
+    return matrixResult
 }
 
 /**
@@ -107,34 +103,29 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  1  1  1  1  1
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
-    val matrix = createMatrix(height, width, height * width)
+    val matrixResult = createMatrix(height, width, height * width)
     var const = 1
     var fullCells = 0
-
     while (fullCells < height * width) {
         for (j in const - 1 until width - const + 1) {
-            matrix[const - 1, j] = const
+            matrixResult[const - 1, j] = const
             fullCells++
         }
-
         for (i in const until height - const + 1) {
-            matrix[i, width - const] = const
+            matrixResult[i, width - const] = const
             fullCells++
         }
-
         for (j in width - const - 1 downTo const - 1) {
-            matrix[height - const, j] = const
+            matrixResult[height - const, j] = const
             fullCells++
         }
-
         for (i in height - const - 1 downTo const) {
-            matrix[i, const - 1] = const
+            matrixResult[i, const - 1] = const
             fullCells++
         }
         const++
     }
-
-    return matrix
+    return matrixResult
 }
 
 /**
@@ -150,7 +141,28 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
  * 10 13 16 18
  * 14 17 19 20
  */
-fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSnake(height: Int, width: Int): Matrix<Int> {
+    val matrixResult = createMatrix(height, width, 1)
+    var number = 0
+    var cellWidth = 0
+    var cellHeight = 0
+
+    for (i in 1 until width + height) {
+        while (cellWidth >= 0 && cellHeight < height) {
+            matrixResult[cellHeight, cellWidth] = ++number
+            cellWidth--
+            cellHeight++
+        }
+        if (i < width) {
+            cellWidth = i
+            cellHeight = 0
+        } else {
+            cellWidth = width - 1
+            cellHeight = i - cellWidth
+        }
+    }
+    return matrixResult
+}
 
 /**
  * Средняя
@@ -163,7 +175,17 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    if (matrix.height != matrix.width) throw IllegalAccessException()
+    val size = matrix.height
+    val matrixResult = createMatrix(size, size, matrix[0,0])
+
+    for (i in 0 until size) {
+        for (j in 0 until size)
+            matrixResult[i, j] = matrix[size - (j + 1), i]
+    }
+    return matrixResult
+}
 
 /**
  * Сложная
@@ -178,7 +200,36 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
  * 1 2 3
  * 3 1 2
  */
-fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
+fun isLatinSquare(matrix: Matrix<Int>): Boolean {
+    if (matrix.height != matrix.width) return false
+    val size = matrix.height
+    var expectedSum = 0
+
+    for (i in 0..size)
+        expectedSum += i
+
+    for (i in 0 until size) {
+        for (j in 0 until size) {
+            if (matrix[i, j] !in 0..size) return false
+        }
+    }
+
+    for (i in 0 until size) {
+        var actualSum = 0
+        for (j in 0 until size) {
+            actualSum += matrix[i, j]
+        }
+        if (actualSum != expectedSum) return false
+    }
+    for (j in 0 until size) {
+        var actualSum = 0
+        for (i in 0 until size) {
+            actualSum += matrix[i, j]
+        }
+        if (actualSum != expectedSum) return false
+    }
+    return true
+}
 
 /**
  * Средняя
@@ -197,7 +248,27 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
+    if (matrix.height == 1 && matrix.width == 1) return MatrixImpl(1,1,0)
+    val doubleMatrix = createMatrix(matrix.height + 2, matrix.width + 2, 0)
+
+    for (i in 1 until doubleMatrix.height - 1) {
+        for (j in 1 until doubleMatrix.width - 1) {
+            doubleMatrix[i, j] = matrix[i - 1, j - 1]
+        }
+    }
+
+    for (i in 1 until matrix.height + 1) {
+        for (j in 1 until matrix.width + 1) {
+            val elementSum = doubleMatrix[i - 1, j] + doubleMatrix[i - 1, j - 1] +
+                    doubleMatrix[i, j + 1] + doubleMatrix[i + 1, j + 1] +
+                    doubleMatrix[i + 1, j] + doubleMatrix[i + 1, j - 1] +
+                    doubleMatrix[i, j - 1] + doubleMatrix[i - 1, j + 1]
+            matrix[i - 1, j - 1] = elementSum
+        }
+    }
+    return matrix
+}
 
 /**
  * Средняя
