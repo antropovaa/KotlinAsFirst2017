@@ -285,7 +285,28 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
  * 0 0 1 0
  * 0 0 0 0
  */
-fun findHoles(matrix: Matrix<Int>): Holes = TODO()
+fun findHoles(matrix: Matrix<Int>): Holes {
+    var listOfRows = listOf<Int>()
+    var listOfColumns = listOf<Int>()
+
+    for (i in 0 until matrix.height) {
+        var sum = 0
+        for (j in 0 until matrix.width) {
+            sum += matrix[i, j]
+        }
+        if (sum == 0) listOfRows += i
+    }
+
+    for (j in 0 until matrix.width) {
+        var sum = 0
+        for (i in 0 until matrix.height) {
+            sum += matrix[i, j]
+        }
+        if (sum == 0) listOfColumns += j
+
+    }
+    return Holes(listOfRows, listOfColumns)
+}
 
 /**
  * Класс для описания местонахождения "дырок" в матрице
@@ -306,9 +327,21 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  *
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
-fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
+    val matrixResult = createMatrix(matrix.height, matrix.width, 0)
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            var sum = 0
+            for (m in 0..i)
+                for (n in 0..j)
+                    sum += matrix[m, n]
+            matrixResult[i, j] = sum
+        }
+    }
+    return matrixResult
+}
 
-/**
+/**§
  * Сложная
  *
  * Даны мозаичные изображения замочной скважины и ключа. Пройдет ли ключ в скважину?
@@ -336,7 +369,12 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * Инвертировать заданную матрицу.
  * При инвертировании знак каждого элемента матрицы следует заменить на обратный
  */
-operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
+    for (i in 0 until this.height)
+        for (j in 0 until this.width)
+            this[i, j] = -this[i, j]
+    return this
+}
 
 /**
  * Средняя
@@ -346,7 +384,15 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
  * В противном случае бросить IllegalArgumentException.
  * Подробно про порядок умножения см. статью Википедии "Умножение матриц".
  */
-operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
+    if (this.width != other.height) throw IllegalAccessException()
+    val matrixResult = createMatrix(this.height, other.width, 0)
+    for (i in 0 until this.height)
+        for (j in 0 until other.width)
+            for (k in 0 until this.width)
+            matrixResult[i,j] += this[i, k] * other[k, j]
+    return matrixResult
+}
 
 /**
  * Сложная
