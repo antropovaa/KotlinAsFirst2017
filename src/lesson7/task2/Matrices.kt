@@ -176,9 +176,9 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> {
  * 7 8 9      9 6 3
  */
 fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
-    if (matrix.height != matrix.width) throw IllegalAccessException()
+    if (matrix.height != matrix.width) throw IllegalArgumentException()
     val size = matrix.height
-    val matrixResult = createMatrix(size, size, matrix[0,0])
+    val matrixResult = createMatrix(size, size, matrix[0, 0])
 
     for (i in 0 until size) {
         for (j in 0 until size)
@@ -249,26 +249,23 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean {
  * 42 ===> 0
  */
 fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
-    if (matrix.height == 1 && matrix.width == 1) return MatrixImpl(1,1,0)
-    val doubleMatrix = createMatrix(matrix.height + 2, matrix.width + 2, 0)
+    val matrixResult = MatrixImpl(matrix.height, matrix.width, 0)
 
-    for (i in 1 until doubleMatrix.height - 1) {
-        for (j in 1 until doubleMatrix.width - 1) {
-            doubleMatrix[i, j] = matrix[i - 1, j - 1]
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            val elementSum = cellValue(i - 1, j, matrix) + cellValue(i - 1, j - 1, matrix) +
+                    cellValue(i, j + 1, matrix) + cellValue(i + 1, j + 1, matrix) +
+                    cellValue(i + 1, j, matrix) + cellValue(i + 1, j - 1, matrix) +
+                    cellValue(i, j - 1, matrix) + cellValue(i - 1, j + 1, matrix)
+            matrixResult[i, j] = elementSum
         }
     }
-
-    for (i in 1 until matrix.height + 1) {
-        for (j in 1 until matrix.width + 1) {
-            val elementSum = doubleMatrix[i - 1, j] + doubleMatrix[i - 1, j - 1] +
-                    doubleMatrix[i, j + 1] + doubleMatrix[i + 1, j + 1] +
-                    doubleMatrix[i + 1, j] + doubleMatrix[i + 1, j - 1] +
-                    doubleMatrix[i, j - 1] + doubleMatrix[i - 1, j + 1]
-            matrix[i - 1, j - 1] = elementSum
-        }
-    }
-    return matrix
+    return matrixResult
 }
+
+fun cellValue(m: Int, n: Int, matrix: Matrix<Int>) =
+        if (m < 0 || m >= matrix.height || n < 0 || n >= matrix.width) 0
+        else matrix[m, n]
 
 /**
  * Средняя
@@ -388,9 +385,10 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
     if (this.width != other.height) throw IllegalAccessException()
     val matrixResult = createMatrix(this.height, other.width, 0)
     for (i in 0 until this.height)
-        for (j in 0 until other.width)
+        for (j in 0 until other.width) {
             for (k in 0 until this.width)
-            matrixResult[i,j] += this[i, k] * other[k, j]
+                matrixResult[i, j] += this[i, k] * other[k, j]
+        }
     return matrixResult
 }
 
@@ -463,3 +461,4 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO(
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> = TODO()
+
