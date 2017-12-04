@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson8.task1
 
+import org.omg.DynamicAny.NameDynAnyPairSeqHelper
 import java.io.File
 
 /**
@@ -53,7 +54,19 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val result = mutableMapOf<String, Int>()
+    for (string in substrings) {
+        var entries = 0
+        for (line in File(inputName).readLines()) {
+            val stringRegex = string.toLowerCase().toRegex()
+            entries += stringRegex.findAll(line.toLowerCase()).count()
+            result[string] = entries
+        }
+        result[string] = entries
+    }
+    return result
+}
 
 
 /**
@@ -70,7 +83,14 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val letters = listOf(Pair('Ы', 'И'), Pair('Я', 'А'), Pair('Ю', 'У'),
+            Pair('ы', 'и'), Pair('я', 'а'), Pair('ю', 'у'))
+    val textSymbols = File(inputName).readText().toCharArray()
+    for (i in 1 until textSymbols.size)
+        if (textSymbols[i] in "ЫЯЮыяю" && textSymbols[i - 1] in "ЖЧШЩжчшщ")
+            for (j in 0 until letters.size)
+                if (textSymbols[i] == letters[j].first) textSymbols[i] = letters[j].second
+    return File(outputName).writeText(textSymbols.joinToString(""))
 }
 
 /**
