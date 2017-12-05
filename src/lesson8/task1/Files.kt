@@ -111,7 +111,26 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    var maxLength = 0
+    for (line in File(inputName).readLines())
+        if (line.trim().length > maxLength)
+            maxLength = line.trim().length
+
+    val result = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        val clearLine = line.trim()
+        val spaces = (maxLength - clearLine.length) / 2
+        result.write(spaces.add() + clearLine)
+        result.newLine()
+    }
+    return result.close()
+}
+
+fun Int.add(): String {
+    val result = StringBuilder()
+    for (i in 0 until this)
+        result.append(" ")
+    return result.toString()
 }
 
 /**
@@ -142,7 +161,28 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    var maxLength = 0
+    for (line in File(inputName).readLines())
+        if (line.trim().length > maxLength)
+            maxLength = line.trim().length
+
+    val result = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        val words = line.split(" ").filter { it.isNotEmpty() }.toMutableList()
+        val finalLine: String
+        if (words.size <= 1) finalLine = line.trim()
+        else {
+            while (maxLength > words.joinToString("").length) {
+                for (i in 0 until words.size - 1)
+                    if (maxLength > words.joinToString("").length)
+                        words[i] += " "
+            }
+            finalLine = words.joinToString("")
+        }
+        result.write(finalLine)
+        result.newLine()
+    }
+    result.close()
 }
 
 /**
