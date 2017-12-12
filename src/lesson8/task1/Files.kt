@@ -171,7 +171,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         val words = line.split(" ").filter { it.isNotEmpty() }.toMutableList()
         var wordsLength = words.joinToString("").length
         val finalLine: String
-        if (words.size <= 1) finalLine = line.trim()
+        if (words.size <= 1)
+            finalLine = line.trim()
         else {
             while (maxLength > wordsLength) {
                 for (i in 0 until words.size - 1)
