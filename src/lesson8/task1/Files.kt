@@ -56,12 +56,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
+    val lines = File(inputName).readLines()
     for (string in substrings) {
         var entries = 0
-        for (line in File(inputName).readLines()) {
+        for (line in lines) {
             val stringRegex = string.toLowerCase().toRegex()
             entries += stringRegex.findAll(line.toLowerCase()).count()
-            result[string] = entries
         }
         result[string] = entries
     }
@@ -112,25 +112,24 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     var maxLength = 0
-    for (line in File(inputName).readLines())
+    val lines = File(inputName).readLines()
+    for (line in lines)
         if (line.trim().length > maxLength)
             maxLength = line.trim().length
 
     val result = File(outputName).bufferedWriter()
     for (line in File(inputName).readLines()) {
-        val clearLine = line.trim()
+        var clearLine = line.trim()
         val spaces = (maxLength - clearLine.length) / 2
-        result.write(spaces.add() + clearLine)
+        if (clearLine.isEmpty())
+            for (i in 0 until spaces)
+                clearLine += " "
+        for (i in 0 until spaces)
+            clearLine = clearLine.prependIndent(indent = " ")
+        result.write(clearLine)
         result.newLine()
     }
     return result.close()
-}
-
-fun Int.add(): String {
-    val result = StringBuilder()
-    for (i in 0 until this)
-        result.append(" ")
-    return result.toString()
 }
 
 /**
@@ -162,20 +161,24 @@ fun Int.add(): String {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     var maxLength = 0
-    for (line in File(inputName).readLines())
+    val lines = File(inputName).readLines()
+    for (line in lines)
         if (line.trim().length > maxLength)
             maxLength = line.trim().length
 
     val result = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
+    for (line in lines) {
         val words = line.split(" ").filter { it.isNotEmpty() }.toMutableList()
+        var wordsLength = words.joinToString("").length
         val finalLine: String
         if (words.size <= 1) finalLine = line.trim()
         else {
-            while (maxLength > words.joinToString("").length) {
+            while (maxLength > wordsLength) {
                 for (i in 0 until words.size - 1)
-                    if (maxLength > words.joinToString("").length)
+                    if (maxLength > wordsLength) {
                         words[i] += " "
+                        wordsLength++
+                    }
             }
             finalLine = words.joinToString("")
         }
