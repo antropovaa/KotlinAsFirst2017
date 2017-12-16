@@ -56,12 +56,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
-    val lines = File(inputName).readLines()
+    val lines = File(inputName).readText().toLowerCase().split("\n")
     for (string in substrings) {
         var entries = 0
+        val stringRegex = string.toLowerCase().toRegex()
         for (line in lines) {
-            val stringRegex = string.toLowerCase().toRegex()
-            entries += stringRegex.findAll(line.toLowerCase()).count()
+            entries += stringRegex.findAll(line).count()
         }
         result[string] = entries
     }
@@ -118,7 +118,7 @@ fun centerFile(inputName: String, outputName: String) {
             maxLength = line.trim().length
 
     val result = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
+    for (line in lines) {
         var clearLine = line.trim()
         val spaces = (maxLength - clearLine.length) / 2
         if (clearLine.isEmpty())
@@ -163,17 +163,18 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     var maxLength = 0
     val lines = File(inputName).readLines()
     for (line in lines)
-        if (line.trim().length > maxLength)
+        if (line.trim().length > maxLength) {
             maxLength = line.trim().length
+        }
 
     val result = File(outputName).bufferedWriter()
     for (line in lines) {
         val words = line.split(" ").filter { it.isNotEmpty() }.toMutableList()
         var wordsLength = words.joinToString("").length
         val finalLine: String
-        if (words.size <= 1)
+        if (words.size <= 1) {
             finalLine = line.trim()
-        else {
+        } else {
             while (maxLength > wordsLength) {
                 for (i in 0 until words.size - 1)
                     if (maxLength > wordsLength) {

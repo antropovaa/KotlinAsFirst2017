@@ -64,26 +64,26 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
 fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     val matrixResult = createMatrix(height, width, height * width)
     var currentNumber = 1
-    var const = 1
+    var arg = 1
     while (currentNumber <= height * width) {
-        for (j in const - 1 until width - const + 1) {
-            matrixResult[const - 1, j] = currentNumber
+        for (j in arg - 1 until width - arg + 1) {
+            matrixResult[arg - 1, j] = currentNumber
             currentNumber++
         }
-        for (i in const until height - const + 1) {
-            matrixResult[i, width - const] = currentNumber
+        for (i in arg until height - arg + 1) {
+            matrixResult[i, width - arg] = currentNumber
             currentNumber++
         }
         if (currentNumber >= height * width) return matrixResult
-        for (j in width - const - 1 downTo const - 1) {
-            matrixResult[height - const, j] = currentNumber
+        for (j in width - arg - 1 downTo arg - 1) {
+            matrixResult[height - arg, j] = currentNumber
             currentNumber++
         }
-        for (i in height - const - 1 downTo const) {
-            matrixResult[i, const - 1] = currentNumber
+        for (i in height - arg - 1 downTo arg) {
+            matrixResult[i, arg - 1] = currentNumber
             currentNumber++
         }
-        const++
+        arg++
     }
     return matrixResult
 }
@@ -104,26 +104,26 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val matrixResult = createMatrix(height, width, height * width)
-    var const = 1
+    var arg = 1
     var fullCells = 0
     while (fullCells < height * width) {
-        for (j in const - 1 until width - const + 1) {
-            matrixResult[const - 1, j] = const
+        for (j in arg - 1 until width - arg + 1) {
+            matrixResult[arg - 1, j] = arg
             fullCells++
         }
-        for (i in const until height - const + 1) {
-            matrixResult[i, width - const] = const
+        for (i in arg until height - arg + 1) {
+            matrixResult[i, width - arg] = arg
             fullCells++
         }
-        for (j in width - const - 1 downTo const - 1) {
-            matrixResult[height - const, j] = const
+        for (j in width - arg - 1 downTo arg - 1) {
+            matrixResult[height - arg, j] = arg
             fullCells++
         }
-        for (i in height - const - 1 downTo const) {
-            matrixResult[i, const - 1] = const
+        for (i in height - arg - 1 downTo arg) {
+            matrixResult[i, arg - 1] = arg
             fullCells++
         }
-        const++
+        arg++
     }
     return matrixResult
 }
